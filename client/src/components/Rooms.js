@@ -5,7 +5,7 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import Switch from "@material-ui/core/Switch";
 import axios from 'axios';
 import { addDevice, changeDeviceStatus, changeRoomStatus, getDeviceStatus, getRoomStatus, removeDevice } from "../Web3Client";
-const label = { inputProps: { "aria-label": "Switch demo" } };
+
 function Rooms() {
 
   function on_led(p) {
