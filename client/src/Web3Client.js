@@ -1,6 +1,7 @@
 import Web3 from 'web3';
 import ControlDevices from './contracts/ControlDevices.json';
 
+
 let selectedAccount;
 let contract;
 let isReady = false;
@@ -40,11 +41,11 @@ export const init = async () => {
 
 };
 
-export const addDevice = async (pin, name) => {
+export const addDevice = async (pin) => {
     if(!isReady) {
         await init();
     }
-    return contract.methods.add_device(pin, name).send({from: selectedAccount});
+    return contract.methods.add_device(pin).send({from: selectedAccount});
 }
 
 export const removeDevice = async (pin) => {
@@ -81,3 +82,13 @@ export const changeRoomStatus = async (pin) => {
     }
     return contract.methods.change_room_status(pin).send({from: selectedAccount});
 }
+
+// getting total time of the device
+export const getTotalTime = async (pin) => {
+    if (!isReady) {
+        await init();
+    }
+    return contract.methods.getTotalTime(pin).call({
+        from: selectedAccount,
+    });
+};
