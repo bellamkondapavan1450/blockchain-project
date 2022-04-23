@@ -31,7 +31,7 @@ function Charts(){
         Legend
       );
       
-    const fanVoltage = 12, fanCurrent = 10, lightVoltage = 12, lightCurrent = 10;
+    const fanVoltage = 4.5, fanCurrent = 17, lightVoltage = 1.78, lightCurrent = 4.5;
 
        const options = {
         responsive: true,

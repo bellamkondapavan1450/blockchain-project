@@ -1,10 +1,26 @@
 const express = require("express");
 const app = express();
-const { Board, Led, Hygrometer, Thermometer } = require("johnny-five");
+const { Board, Led, Hygrometer, Thermometer, Sensor } = require("johnny-five");
 const board = new Board();
 var isReady = false;
 board.on("ready", () => {
     isReady = true;
+});
+
+app.get("/getData", (req, res) => {
+    if(isReady) {
+        const sensor = new Sensor({
+            pin:10,
+            type:"digital"
+        });
+        sensor.on("change", function(res) {
+            console.log(res);
+        });
+        
+        res.json("Done");
+    } else {
+        res.json("Board not ready");
+    }
 });
 
 app.get("/ledon", (req, res) => {
