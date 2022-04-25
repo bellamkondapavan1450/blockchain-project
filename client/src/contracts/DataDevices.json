@@ -2381,7 +2381,7 @@
                 }
               ]
             },
-            "name": "abi_decode_t_struct$_device_$372_memory_ptr",
+            "name": "abi_decode_t_struct$_device_$382_memory_ptr",
             "nodeType": "YulFunctionDefinition",
             "parameters": [
               {
@@ -2605,7 +2605,7 @@
                           }
                         ],
                         "functionName": {
-                          "name": "abi_decode_t_struct$_device_$372_memory_ptr",
+                          "name": "abi_decode_t_struct$_device_$382_memory_ptr",
                           "nodeType": "YulIdentifier",
                           "src": "4888:43:3"
                         },
@@ -2624,7 +2624,7 @@
                 }
               ]
             },
-            "name": "abi_decode_tuple_t_struct$_device_$372_memory_ptr",
+            "name": "abi_decode_tuple_t_struct$_device_$382_memory_ptr",
             "nodeType": "YulFunctionDefinition",
             "parameters": [
               {
@@ -4279,7 +4279,7 @@
                           }
                         ],
                         "functionName": {
-                          "name": "abi_decode_t_struct$_device_$372_memory_ptr",
+                          "name": "abi_decode_t_struct$_device_$382_memory_ptr",
                           "nodeType": "YulIdentifier",
                           "src": "8111:43:3"
                         },
@@ -4371,7 +4371,7 @@
                 }
               ]
             },
-            "name": "abi_decode_tuple_t_struct$_device_$372_memory_ptrt_uint256",
+            "name": "abi_decode_tuple_t_struct$_device_$382_memory_ptrt_uint256",
             "nodeType": "YulFunctionDefinition",
             "parameters": [
               {
@@ -4955,7 +4955,7 @@
           }
         ]
       },
-      "contents": "{\n\n    function allocate_unbounded() -> memPtr {\n        memPtr := mload(64)\n    }\n\n    function revert_error_dbdddcbe895c83990c08b3492a0e83918d802a52331272ac6fdb6a7c4aea3b1b() {\n        revert(0, 0)\n    }\n\n    function revert_error_c1322bf8034eace5e0b5c7295db60986aa89aae5e0ea0873e4689e076861a5db() {\n        revert(0, 0)\n    }\n\n    function revert_error_1b9f4a0a5773e33b91aa01db23bf8c55fce1411167c872835e7fa00a4f17d46d() {\n        revert(0, 0)\n    }\n\n    function revert_error_987264b3b1d58a9c7f8255e93e81c77d86d6299019c33110a076957a3e06e2ae() {\n        revert(0, 0)\n    }\n\n    function round_up_to_mul_of_32(value) -> result {\n        result := and(add(value, 31), not(31))\n    }\n\n    function panic_error_0x41() {\n        mstore(0, 35408467139433450592217433187231851964531694900788300625387963629091585785856)\n        mstore(4, 0x41)\n        revert(0, 0x24)\n    }\n\n    function finalize_allocation(memPtr, size) {\n        let newFreePtr := add(memPtr, round_up_to_mul_of_32(size))\n        // protect against overflow\n        if or(gt(newFreePtr, 0xffffffffffffffff), lt(newFreePtr, memPtr)) { panic_error_0x41() }\n        mstore(64, newFreePtr)\n    }\n\n    function allocate_memory(size) -> memPtr {\n        memPtr := allocate_unbounded()\n        finalize_allocation(memPtr, size)\n    }\n\n    function array_allocation_size_t_string_memory_ptr(length) -> size {\n        // Make sure we can allocate memory without overflow\n        if gt(length, 0xffffffffffffffff) { panic_error_0x41() }\n\n        size := round_up_to_mul_of_32(length)\n\n        // add length slot\n        size := add(size, 0x20)\n\n    }\n\n    function copy_calldata_to_memory(src, dst, length) {\n        calldatacopy(dst, src, length)\n        // clear end\n        mstore(add(dst, length), 0)\n    }\n\n    function abi_decode_available_length_t_string_memory_ptr(src, length, end) -> array {\n        array := allocate_memory(array_allocation_size_t_string_memory_ptr(length))\n        mstore(array, length)\n        let dst := add(array, 0x20)\n        if gt(add(src, length), end) { revert_error_987264b3b1d58a9c7f8255e93e81c77d86d6299019c33110a076957a3e06e2ae() }\n        copy_calldata_to_memory(src, dst, length)\n    }\n\n    // string\n    function abi_decode_t_string_memory_ptr(offset, end) -> array {\n        if iszero(slt(add(offset, 0x1f), end)) { revert_error_1b9f4a0a5773e33b91aa01db23bf8c55fce1411167c872835e7fa00a4f17d46d() }\n        let length := calldataload(offset)\n        array := abi_decode_available_length_t_string_memory_ptr(add(offset, 0x20), length, end)\n    }\n\n    function abi_decode_tuple_t_string_memory_ptr(headStart, dataEnd) -> value0 {\n        if slt(sub(dataEnd, headStart), 32) { revert_error_dbdddcbe895c83990c08b3492a0e83918d802a52331272ac6fdb6a7c4aea3b1b() }\n\n        {\n\n            let offset := calldataload(add(headStart, 0))\n            if gt(offset, 0xffffffffffffffff) { revert_error_c1322bf8034eace5e0b5c7295db60986aa89aae5e0ea0873e4689e076861a5db() }\n\n            value0 := abi_decode_t_string_memory_ptr(add(headStart, offset), dataEnd)\n        }\n\n    }\n\n    function revert_error_3538a459e4a0eb828f1aed5ebe5dc96fe59620a31d9b33e41259bb820cae769f() {\n        revert(0, 0)\n    }\n\n    function revert_error_5e8f644817bc4960744f35c15999b6eff64ae702f94b1c46297cfd4e1aec2421() {\n        revert(0, 0)\n    }\n\n    function cleanup_t_uint256(value) -> cleaned {\n        cleaned := value\n    }\n\n    function validator_revert_t_uint256(value) {\n        if iszero(eq(value, cleanup_t_uint256(value))) { revert(0, 0) }\n    }\n\n    function abi_decode_t_uint256(offset, end) -> value {\n        value := calldataload(offset)\n        validator_revert_t_uint256(value)\n    }\n\n    // struct DataDevices.device\n    function abi_decode_t_struct$_device_$372_memory_ptr(headStart, end) -> value {\n        if slt(sub(end, headStart), 0x40) { revert_error_3538a459e4a0eb828f1aed5ebe5dc96fe59620a31d9b33e41259bb820cae769f() }\n        value := allocate_memory(0x40)\n\n        {\n            // name\n\n            let offset := calldataload(add(headStart, 0))\n            if gt(offset, 0xffffffffffffffff) { revert_error_5e8f644817bc4960744f35c15999b6eff64ae702f94b1c46297cfd4e1aec2421() }\n\n            mstore(add(value, 0x00), abi_decode_t_string_memory_ptr(add(headStart, offset), end))\n\n        }\n\n        {\n            // data\n\n            let offset := 32\n\n            mstore(add(value, 0x20), abi_decode_t_uint256(add(headStart, offset), end))\n\n        }\n\n    }\n\n    function abi_decode_tuple_t_struct$_device_$372_memory_ptr(headStart, dataEnd) -> value0 {\n        if slt(sub(dataEnd, headStart), 32) { revert_error_dbdddcbe895c83990c08b3492a0e83918d802a52331272ac6fdb6a7c4aea3b1b() }\n\n        {\n\n            let offset := calldataload(add(headStart, 0))\n            if gt(offset, 0xffffffffffffffff) { revert_error_c1322bf8034eace5e0b5c7295db60986aa89aae5e0ea0873e4689e076861a5db() }\n\n            value0 := abi_decode_t_struct$_device_$372_memory_ptr(add(headStart, offset), dataEnd)\n        }\n\n    }\n\n    function abi_encode_t_uint256_to_t_uint256_fromStack(value, pos) {\n        mstore(pos, cleanup_t_uint256(value))\n    }\n\n    function abi_encode_tuple_t_uint256__to_t_uint256__fromStack_reversed(headStart , value0) -> tail {\n        tail := add(headStart, 32)\n\n        abi_encode_t_uint256_to_t_uint256_fromStack(value0,  add(headStart, 0))\n\n    }\n\n    function cleanup_t_uint160(value) -> cleaned {\n        cleaned := and(value, 0xffffffffffffffffffffffffffffffffffffffff)\n    }\n\n    function cleanup_t_address(value) -> cleaned {\n        cleaned := cleanup_t_uint160(value)\n    }\n\n    function abi_encode_t_address_to_t_address_fromStack(value, pos) {\n        mstore(pos, cleanup_t_address(value))\n    }\n\n    function abi_encode_tuple_t_address__to_t_address__fromStack_reversed(headStart , value0) -> tail {\n        tail := add(headStart, 32)\n\n        abi_encode_t_address_to_t_address_fromStack(value0,  add(headStart, 0))\n\n    }\n\n    function abi_decode_tuple_t_uint256(headStart, dataEnd) -> value0 {\n        if slt(sub(dataEnd, headStart), 32) { revert_error_dbdddcbe895c83990c08b3492a0e83918d802a52331272ac6fdb6a7c4aea3b1b() }\n\n        {\n\n            let offset := 0\n\n            value0 := abi_decode_t_uint256(add(headStart, offset), dataEnd)\n        }\n\n    }\n\n    function array_length_t_string_memory_ptr(value) -> length {\n\n        length := mload(value)\n\n    }\n\n    function array_storeLengthForEncoding_t_string_memory_ptr_fromStack(pos, length) -> updated_pos {\n        mstore(pos, length)\n        updated_pos := add(pos, 0x20)\n    }\n\n    function copy_memory_to_memory(src, dst, length) {\n        let i := 0\n        for { } lt(i, length) { i := add(i, 32) }\n        {\n            mstore(add(dst, i), mload(add(src, i)))\n        }\n        if gt(i, length)\n        {\n            // clear end\n            mstore(add(dst, length), 0)\n        }\n    }\n\n    function abi_encode_t_string_memory_ptr_to_t_string_memory_ptr_fromStack(value, pos) -> end {\n        let length := array_length_t_string_memory_ptr(value)\n        pos := array_storeLengthForEncoding_t_string_memory_ptr_fromStack(pos, length)\n        copy_memory_to_memory(add(value, 0x20), pos, length)\n        end := add(pos, round_up_to_mul_of_32(length))\n    }\n\n    function abi_encode_tuple_t_string_memory_ptr_t_uint256__to_t_string_memory_ptr_t_uint256__fromStack_reversed(headStart , value1, value0) -> tail {\n        tail := add(headStart, 64)\n\n        mstore(add(headStart, 0), sub(tail, headStart))\n        tail := abi_encode_t_string_memory_ptr_to_t_string_memory_ptr_fromStack(value0,  tail)\n\n        abi_encode_t_uint256_to_t_uint256_fromStack(value1,  add(headStart, 32))\n\n    }\n\n    function abi_decode_tuple_t_struct$_device_$372_memory_ptrt_uint256(headStart, dataEnd) -> value0, value1 {\n        if slt(sub(dataEnd, headStart), 64) { revert_error_dbdddcbe895c83990c08b3492a0e83918d802a52331272ac6fdb6a7c4aea3b1b() }\n\n        {\n\n            let offset := calldataload(add(headStart, 0))\n            if gt(offset, 0xffffffffffffffff) { revert_error_c1322bf8034eace5e0b5c7295db60986aa89aae5e0ea0873e4689e076861a5db() }\n\n            value0 := abi_decode_t_struct$_device_$372_memory_ptr(add(headStart, offset), dataEnd)\n        }\n\n        {\n\n            let offset := 32\n\n            value1 := abi_decode_t_uint256(add(headStart, offset), dataEnd)\n        }\n\n    }\n\n    function panic_error_0x11() {\n        mstore(0, 35408467139433450592217433187231851964531694900788300625387963629091585785856)\n        mstore(4, 0x11)\n        revert(0, 0x24)\n    }\n\n    function increment_t_uint256(value) -> ret {\n        value := cleanup_t_uint256(value)\n        if eq(value, 0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff) { panic_error_0x11() }\n        ret := add(value, 1)\n    }\n\n    function panic_error_0x22() {\n        mstore(0, 35408467139433450592217433187231851964531694900788300625387963629091585785856)\n        mstore(4, 0x22)\n        revert(0, 0x24)\n    }\n\n    function extract_byte_array_length(data) -> length {\n        length := div(data, 2)\n        let outOfPlaceEncoding := and(data, 1)\n        if iszero(outOfPlaceEncoding) {\n            length := and(length, 0x7f)\n        }\n\n        if eq(outOfPlaceEncoding, lt(length, 32)) {\n            panic_error_0x22()\n        }\n    }\n\n}\n",
+      "contents": "{\n\n    function allocate_unbounded() -> memPtr {\n        memPtr := mload(64)\n    }\n\n    function revert_error_dbdddcbe895c83990c08b3492a0e83918d802a52331272ac6fdb6a7c4aea3b1b() {\n        revert(0, 0)\n    }\n\n    function revert_error_c1322bf8034eace5e0b5c7295db60986aa89aae5e0ea0873e4689e076861a5db() {\n        revert(0, 0)\n    }\n\n    function revert_error_1b9f4a0a5773e33b91aa01db23bf8c55fce1411167c872835e7fa00a4f17d46d() {\n        revert(0, 0)\n    }\n\n    function revert_error_987264b3b1d58a9c7f8255e93e81c77d86d6299019c33110a076957a3e06e2ae() {\n        revert(0, 0)\n    }\n\n    function round_up_to_mul_of_32(value) -> result {\n        result := and(add(value, 31), not(31))\n    }\n\n    function panic_error_0x41() {\n        mstore(0, 35408467139433450592217433187231851964531694900788300625387963629091585785856)\n        mstore(4, 0x41)\n        revert(0, 0x24)\n    }\n\n    function finalize_allocation(memPtr, size) {\n        let newFreePtr := add(memPtr, round_up_to_mul_of_32(size))\n        // protect against overflow\n        if or(gt(newFreePtr, 0xffffffffffffffff), lt(newFreePtr, memPtr)) { panic_error_0x41() }\n        mstore(64, newFreePtr)\n    }\n\n    function allocate_memory(size) -> memPtr {\n        memPtr := allocate_unbounded()\n        finalize_allocation(memPtr, size)\n    }\n\n    function array_allocation_size_t_string_memory_ptr(length) -> size {\n        // Make sure we can allocate memory without overflow\n        if gt(length, 0xffffffffffffffff) { panic_error_0x41() }\n\n        size := round_up_to_mul_of_32(length)\n\n        // add length slot\n        size := add(size, 0x20)\n\n    }\n\n    function copy_calldata_to_memory(src, dst, length) {\n        calldatacopy(dst, src, length)\n        // clear end\n        mstore(add(dst, length), 0)\n    }\n\n    function abi_decode_available_length_t_string_memory_ptr(src, length, end) -> array {\n        array := allocate_memory(array_allocation_size_t_string_memory_ptr(length))\n        mstore(array, length)\n        let dst := add(array, 0x20)\n        if gt(add(src, length), end) { revert_error_987264b3b1d58a9c7f8255e93e81c77d86d6299019c33110a076957a3e06e2ae() }\n        copy_calldata_to_memory(src, dst, length)\n    }\n\n    // string\n    function abi_decode_t_string_memory_ptr(offset, end) -> array {\n        if iszero(slt(add(offset, 0x1f), end)) { revert_error_1b9f4a0a5773e33b91aa01db23bf8c55fce1411167c872835e7fa00a4f17d46d() }\n        let length := calldataload(offset)\n        array := abi_decode_available_length_t_string_memory_ptr(add(offset, 0x20), length, end)\n    }\n\n    function abi_decode_tuple_t_string_memory_ptr(headStart, dataEnd) -> value0 {\n        if slt(sub(dataEnd, headStart), 32) { revert_error_dbdddcbe895c83990c08b3492a0e83918d802a52331272ac6fdb6a7c4aea3b1b() }\n\n        {\n\n            let offset := calldataload(add(headStart, 0))\n            if gt(offset, 0xffffffffffffffff) { revert_error_c1322bf8034eace5e0b5c7295db60986aa89aae5e0ea0873e4689e076861a5db() }\n\n            value0 := abi_decode_t_string_memory_ptr(add(headStart, offset), dataEnd)\n        }\n\n    }\n\n    function revert_error_3538a459e4a0eb828f1aed5ebe5dc96fe59620a31d9b33e41259bb820cae769f() {\n        revert(0, 0)\n    }\n\n    function revert_error_5e8f644817bc4960744f35c15999b6eff64ae702f94b1c46297cfd4e1aec2421() {\n        revert(0, 0)\n    }\n\n    function cleanup_t_uint256(value) -> cleaned {\n        cleaned := value\n    }\n\n    function validator_revert_t_uint256(value) {\n        if iszero(eq(value, cleanup_t_uint256(value))) { revert(0, 0) }\n    }\n\n    function abi_decode_t_uint256(offset, end) -> value {\n        value := calldataload(offset)\n        validator_revert_t_uint256(value)\n    }\n\n    // struct DataDevices.device\n    function abi_decode_t_struct$_device_$382_memory_ptr(headStart, end) -> value {\n        if slt(sub(end, headStart), 0x40) { revert_error_3538a459e4a0eb828f1aed5ebe5dc96fe59620a31d9b33e41259bb820cae769f() }\n        value := allocate_memory(0x40)\n\n        {\n            // name\n\n            let offset := calldataload(add(headStart, 0))\n            if gt(offset, 0xffffffffffffffff) { revert_error_5e8f644817bc4960744f35c15999b6eff64ae702f94b1c46297cfd4e1aec2421() }\n\n            mstore(add(value, 0x00), abi_decode_t_string_memory_ptr(add(headStart, offset), end))\n\n        }\n\n        {\n            // data\n\n            let offset := 32\n\n            mstore(add(value, 0x20), abi_decode_t_uint256(add(headStart, offset), end))\n\n        }\n\n    }\n\n    function abi_decode_tuple_t_struct$_device_$382_memory_ptr(headStart, dataEnd) -> value0 {\n        if slt(sub(dataEnd, headStart), 32) { revert_error_dbdddcbe895c83990c08b3492a0e83918d802a52331272ac6fdb6a7c4aea3b1b() }\n\n        {\n\n            let offset := calldataload(add(headStart, 0))\n            if gt(offset, 0xffffffffffffffff) { revert_error_c1322bf8034eace5e0b5c7295db60986aa89aae5e0ea0873e4689e076861a5db() }\n\n            value0 := abi_decode_t_struct$_device_$382_memory_ptr(add(headStart, offset), dataEnd)\n        }\n\n    }\n\n    function abi_encode_t_uint256_to_t_uint256_fromStack(value, pos) {\n        mstore(pos, cleanup_t_uint256(value))\n    }\n\n    function abi_encode_tuple_t_uint256__to_t_uint256__fromStack_reversed(headStart , value0) -> tail {\n        tail := add(headStart, 32)\n\n        abi_encode_t_uint256_to_t_uint256_fromStack(value0,  add(headStart, 0))\n\n    }\n\n    function cleanup_t_uint160(value) -> cleaned {\n        cleaned := and(value, 0xffffffffffffffffffffffffffffffffffffffff)\n    }\n\n    function cleanup_t_address(value) -> cleaned {\n        cleaned := cleanup_t_uint160(value)\n    }\n\n    function abi_encode_t_address_to_t_address_fromStack(value, pos) {\n        mstore(pos, cleanup_t_address(value))\n    }\n\n    function abi_encode_tuple_t_address__to_t_address__fromStack_reversed(headStart , value0) -> tail {\n        tail := add(headStart, 32)\n\n        abi_encode_t_address_to_t_address_fromStack(value0,  add(headStart, 0))\n\n    }\n\n    function abi_decode_tuple_t_uint256(headStart, dataEnd) -> value0 {\n        if slt(sub(dataEnd, headStart), 32) { revert_error_dbdddcbe895c83990c08b3492a0e83918d802a52331272ac6fdb6a7c4aea3b1b() }\n\n        {\n\n            let offset := 0\n\n            value0 := abi_decode_t_uint256(add(headStart, offset), dataEnd)\n        }\n\n    }\n\n    function array_length_t_string_memory_ptr(value) -> length {\n\n        length := mload(value)\n\n    }\n\n    function array_storeLengthForEncoding_t_string_memory_ptr_fromStack(pos, length) -> updated_pos {\n        mstore(pos, length)\n        updated_pos := add(pos, 0x20)\n    }\n\n    function copy_memory_to_memory(src, dst, length) {\n        let i := 0\n        for { } lt(i, length) { i := add(i, 32) }\n        {\n            mstore(add(dst, i), mload(add(src, i)))\n        }\n        if gt(i, length)\n        {\n            // clear end\n            mstore(add(dst, length), 0)\n        }\n    }\n\n    function abi_encode_t_string_memory_ptr_to_t_string_memory_ptr_fromStack(value, pos) -> end {\n        let length := array_length_t_string_memory_ptr(value)\n        pos := array_storeLengthForEncoding_t_string_memory_ptr_fromStack(pos, length)\n        copy_memory_to_memory(add(value, 0x20), pos, length)\n        end := add(pos, round_up_to_mul_of_32(length))\n    }\n\n    function abi_encode_tuple_t_string_memory_ptr_t_uint256__to_t_string_memory_ptr_t_uint256__fromStack_reversed(headStart , value1, value0) -> tail {\n        tail := add(headStart, 64)\n\n        mstore(add(headStart, 0), sub(tail, headStart))\n        tail := abi_encode_t_string_memory_ptr_to_t_string_memory_ptr_fromStack(value0,  tail)\n\n        abi_encode_t_uint256_to_t_uint256_fromStack(value1,  add(headStart, 32))\n\n    }\n\n    function abi_decode_tuple_t_struct$_device_$382_memory_ptrt_uint256(headStart, dataEnd) -> value0, value1 {\n        if slt(sub(dataEnd, headStart), 64) { revert_error_dbdddcbe895c83990c08b3492a0e83918d802a52331272ac6fdb6a7c4aea3b1b() }\n\n        {\n\n            let offset := calldataload(add(headStart, 0))\n            if gt(offset, 0xffffffffffffffff) { revert_error_c1322bf8034eace5e0b5c7295db60986aa89aae5e0ea0873e4689e076861a5db() }\n\n            value0 := abi_decode_t_struct$_device_$382_memory_ptr(add(headStart, offset), dataEnd)\n        }\n\n        {\n\n            let offset := 32\n\n            value1 := abi_decode_t_uint256(add(headStart, offset), dataEnd)\n        }\n\n    }\n\n    function panic_error_0x11() {\n        mstore(0, 35408467139433450592217433187231851964531694900788300625387963629091585785856)\n        mstore(4, 0x11)\n        revert(0, 0x24)\n    }\n\n    function increment_t_uint256(value) -> ret {\n        value := cleanup_t_uint256(value)\n        if eq(value, 0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff) { panic_error_0x11() }\n        ret := add(value, 1)\n    }\n\n    function panic_error_0x22() {\n        mstore(0, 35408467139433450592217433187231851964531694900788300625387963629091585785856)\n        mstore(4, 0x22)\n        revert(0, 0x24)\n    }\n\n    function extract_byte_array_length(data) -> length {\n        length := div(data, 2)\n        let outOfPlaceEncoding := and(data, 1)\n        if iszero(outOfPlaceEncoding) {\n            length := and(length, 0x7f)\n        }\n\n        if eq(outOfPlaceEncoding, lt(length, 32)) {\n            panic_error_0x22()\n        }\n    }\n\n}\n",
       "id": 3,
       "language": "Yul",
       "name": "#utility.yul"
@@ -4969,15 +4969,15 @@
     "absolutePath": "project:/contracts/DataDevices.sol",
     "exportedSymbols": {
       "DataDevices": [
-        469
+        479
       ]
     },
-    "id": 470,
+    "id": 480,
     "license": "MIT",
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 362,
+        "id": 372,
         "literals": [
           "solidity",
           "^",
@@ -4994,9 +4994,9 @@
         "contractDependencies": [],
         "contractKind": "contract",
         "fullyImplemented": true,
-        "id": 469,
+        "id": 479,
         "linearizedBaseContracts": [
-          469
+          479
         ],
         "name": "DataDevices",
         "nameLocation": "67:11:1",
@@ -5005,12 +5005,12 @@
           {
             "constant": false,
             "functionSelector": "8da5cb5b",
-            "id": 364,
+            "id": 374,
             "mutability": "mutable",
             "name": "owner",
             "nameLocation": "101:5:1",
             "nodeType": "VariableDeclaration",
-            "scope": 469,
+            "scope": 479,
             "src": "86:20:1",
             "stateVariable": true,
             "storageLocation": "default",
@@ -5019,7 +5019,7 @@
               "typeString": "address"
             },
             "typeName": {
-              "id": 363,
+              "id": 373,
               "name": "address",
               "nodeType": "ElementaryTypeName",
               "src": "86:7:1",
@@ -5034,12 +5034,12 @@
           {
             "constant": false,
             "functionSelector": "af640d0f",
-            "id": 367,
+            "id": 377,
             "mutability": "mutable",
             "name": "id",
             "nameLocation": "126:2:1",
             "nodeType": "VariableDeclaration",
-            "scope": 469,
+            "scope": 479,
             "src": "114:18:1",
             "stateVariable": true,
             "storageLocation": "default",
@@ -5048,7 +5048,7 @@
               "typeString": "uint256"
             },
             "typeName": {
-              "id": 365,
+              "id": 375,
               "name": "uint",
               "nodeType": "ElementaryTypeName",
               "src": "114:4:1",
@@ -5059,7 +5059,7 @@
             },
             "value": {
               "hexValue": "30",
-              "id": 366,
+              "id": 376,
               "isConstant": false,
               "isLValue": false,
               "isPure": true,
@@ -5077,16 +5077,16 @@
           },
           {
             "canonicalName": "DataDevices.device",
-            "id": 372,
+            "id": 382,
             "members": [
               {
                 "constant": false,
-                "id": 369,
+                "id": 379,
                 "mutability": "mutable",
                 "name": "name",
                 "nameLocation": "236:4:1",
                 "nodeType": "VariableDeclaration",
-                "scope": 372,
+                "scope": 382,
                 "src": "229:11:1",
                 "stateVariable": false,
                 "storageLocation": "default",
@@ -5095,7 +5095,7 @@
                   "typeString": "string"
                 },
                 "typeName": {
-                  "id": 368,
+                  "id": 378,
                   "name": "string",
                   "nodeType": "ElementaryTypeName",
                   "src": "229:6:1",
@@ -5108,12 +5108,12 @@
               },
               {
                 "constant": false,
-                "id": 371,
+                "id": 381,
                 "mutability": "mutable",
                 "name": "data",
                 "nameLocation": "255:4:1",
                 "nodeType": "VariableDeclaration",
-                "scope": 372,
+                "scope": 382,
                 "src": "250:9:1",
                 "stateVariable": false,
                 "storageLocation": "default",
@@ -5122,7 +5122,7 @@
                   "typeString": "uint256"
                 },
                 "typeName": {
-                  "id": 370,
+                  "id": 380,
                   "name": "uint",
                   "nodeType": "ElementaryTypeName",
                   "src": "250:4:1",
@@ -5137,30 +5137,30 @@
             "name": "device",
             "nameLocation": "213:6:1",
             "nodeType": "StructDefinition",
-            "scope": 469,
+            "scope": 479,
             "src": "206:60:1",
             "visibility": "public"
           },
           {
             "constant": false,
             "functionSelector": "d709883e",
-            "id": 377,
+            "id": 387,
             "mutability": "mutable",
             "name": "Devices",
             "nameLocation": "358:7:1",
             "nodeType": "VariableDeclaration",
-            "scope": 469,
+            "scope": 479,
             "src": "329:36:1",
             "stateVariable": true,
             "storageLocation": "default",
             "typeDescriptions": {
-              "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_device_$372_storage_$",
+              "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_device_$382_storage_$",
               "typeString": "mapping(uint256 => struct DataDevices.device)"
             },
             "typeName": {
-              "id": 376,
+              "id": 386,
               "keyType": {
-                "id": 373,
+                "id": 383,
                 "name": "uint",
                 "nodeType": "ElementaryTypeName",
                 "src": "337:4:1",
@@ -5172,23 +5172,23 @@
               "nodeType": "Mapping",
               "src": "329:21:1",
               "typeDescriptions": {
-                "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_device_$372_storage_$",
+                "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_device_$382_storage_$",
                 "typeString": "mapping(uint256 => struct DataDevices.device)"
               },
               "valueType": {
-                "id": 375,
+                "id": 385,
                 "nodeType": "UserDefinedTypeName",
                 "pathNode": {
-                  "id": 374,
+                  "id": 384,
                   "name": "device",
                   "nodeType": "IdentifierPath",
-                  "referencedDeclaration": 372,
+                  "referencedDeclaration": 382,
                   "src": "343:6:1"
                 },
-                "referencedDeclaration": 372,
+                "referencedDeclaration": 382,
                 "src": "343:6:1",
                 "typeDescriptions": {
-                  "typeIdentifier": "t_struct$_device_$372_storage_ptr",
+                  "typeIdentifier": "t_struct$_device_$382_storage_ptr",
                   "typeString": "struct DataDevices.device"
                 }
               }
@@ -5197,23 +5197,23 @@
           },
           {
             "body": {
-              "id": 385,
+              "id": 395,
               "nodeType": "Block",
               "src": "411:34:1",
               "statements": [
                 {
                   "expression": {
-                    "id": 383,
+                    "id": 393,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
                     "lValueRequested": false,
                     "leftHandSide": {
-                      "id": 380,
+                      "id": 390,
                       "name": "owner",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 364,
+                      "referencedDeclaration": 374,
                       "src": "420:5:1",
                       "typeDescriptions": {
                         "typeIdentifier": "t_address",
@@ -5224,7 +5224,7 @@
                     "operator": "=",
                     "rightHandSide": {
                       "expression": {
-                        "id": 381,
+                        "id": 391,
                         "name": "msg",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
@@ -5235,7 +5235,7 @@
                           "typeString": "msg"
                         }
                       },
-                      "id": 382,
+                      "id": 392,
                       "isConstant": false,
                       "isLValue": false,
                       "isPure": false,
@@ -5254,13 +5254,13 @@
                       "typeString": "address"
                     }
                   },
-                  "id": 384,
+                  "id": 394,
                   "nodeType": "ExpressionStatement",
                   "src": "420:18:1"
                 }
               ]
             },
-            "id": 386,
+            "id": 396,
             "implemented": true,
             "kind": "constructor",
             "modifiers": [],
@@ -5268,18 +5268,18 @@
             "nameLocation": "-1:-1:-1",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 378,
+              "id": 388,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "408:2:1"
             },
             "returnParameters": {
-              "id": 379,
+              "id": 389,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "411:0:1"
             },
-            "scope": 469,
+            "scope": 479,
             "src": "397:48:1",
             "stateMutability": "nonpayable",
             "virtual": false,
@@ -5287,7 +5287,7 @@
           },
           {
             "body": {
-              "id": 408,
+              "id": 418,
               "nodeType": "Block",
               "src": "541:93:1",
               "statements": [
@@ -5299,14 +5299,14 @@
                           "typeIdentifier": "t_address",
                           "typeString": "address"
                         },
-                        "id": 395,
+                        "id": 405,
                         "isConstant": false,
                         "isLValue": false,
                         "isPure": false,
                         "lValueRequested": false,
                         "leftExpression": {
                           "expression": {
-                            "id": 392,
+                            "id": 402,
                             "name": "msg",
                             "nodeType": "Identifier",
                             "overloadedDeclarations": [],
@@ -5317,7 +5317,7 @@
                               "typeString": "msg"
                             }
                           },
-                          "id": 393,
+                          "id": 403,
                           "isConstant": false,
                           "isLValue": false,
                           "isPure": false,
@@ -5333,11 +5333,11 @@
                         "nodeType": "BinaryOperation",
                         "operator": "==",
                         "rightExpression": {
-                          "id": 394,
+                          "id": 404,
                           "name": "owner",
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
-                          "referencedDeclaration": 364,
+                          "referencedDeclaration": 374,
                           "src": "573:5:1",
                           "typeDescriptions": {
                             "typeIdentifier": "t_address",
@@ -5358,7 +5358,7 @@
                           "typeString": "bool"
                         }
                       ],
-                      "id": 391,
+                      "id": 401,
                       "name": "require",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [
@@ -5372,7 +5372,7 @@
                         "typeString": "function (bool) pure"
                       }
                     },
-                    "id": 396,
+                    "id": 406,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -5387,33 +5387,33 @@
                       "typeString": "tuple()"
                     }
                   },
-                  "id": 397,
+                  "id": 407,
                   "nodeType": "ExpressionStatement",
                   "src": "551:28:1"
                 },
                 {
                   "expression": {
-                    "id": 406,
+                    "id": 416,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
                     "lValueRequested": false,
                     "leftHandSide": {
                       "baseExpression": {
-                        "id": 398,
+                        "id": 408,
                         "name": "Devices",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 377,
+                        "referencedDeclaration": 387,
                         "src": "589:7:1",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_device_$372_storage_$",
+                          "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_device_$382_storage_$",
                           "typeString": "mapping(uint256 => struct DataDevices.device storage ref)"
                         }
                       },
-                      "id": 401,
+                      "id": 411,
                       "indexExpression": {
-                        "id": 400,
+                        "id": 410,
                         "isConstant": false,
                         "isLValue": false,
                         "isPure": false,
@@ -5423,11 +5423,11 @@
                         "prefix": true,
                         "src": "597:4:1",
                         "subExpression": {
-                          "id": 399,
+                          "id": 409,
                           "name": "id",
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
-                          "referencedDeclaration": 367,
+                          "referencedDeclaration": 377,
                           "src": "599:2:1",
                           "typeDescriptions": {
                             "typeIdentifier": "t_uint256",
@@ -5446,7 +5446,7 @@
                       "nodeType": "IndexAccess",
                       "src": "589:13:1",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_struct$_device_$372_storage",
+                        "typeIdentifier": "t_struct$_device_$382_storage",
                         "typeString": "struct DataDevices.device storage ref"
                       }
                     },
@@ -5455,11 +5455,11 @@
                     "rightHandSide": {
                       "arguments": [
                         {
-                          "id": 403,
+                          "id": 413,
                           "name": "device_name",
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
-                          "referencedDeclaration": 388,
+                          "referencedDeclaration": 398,
                           "src": "612:11:1",
                           "typeDescriptions": {
                             "typeIdentifier": "t_string_memory_ptr",
@@ -5468,7 +5468,7 @@
                         },
                         {
                           "hexValue": "30",
-                          "id": 404,
+                          "id": 414,
                           "isConstant": false,
                           "isLValue": false,
                           "isPure": true,
@@ -5494,18 +5494,18 @@
                             "typeString": "int_const 0"
                           }
                         ],
-                        "id": 402,
+                        "id": 412,
                         "name": "device",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 372,
+                        "referencedDeclaration": 382,
                         "src": "605:6:1",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_type$_t_struct$_device_$372_storage_ptr_$",
+                          "typeIdentifier": "t_type$_t_struct$_device_$382_storage_ptr_$",
                           "typeString": "type(struct DataDevices.device storage pointer)"
                         }
                       },
-                      "id": 405,
+                      "id": 415,
                       "isConstant": false,
                       "isLValue": false,
                       "isPure": false,
@@ -5516,24 +5516,24 @@
                       "src": "605:22:1",
                       "tryCall": false,
                       "typeDescriptions": {
-                        "typeIdentifier": "t_struct$_device_$372_memory_ptr",
+                        "typeIdentifier": "t_struct$_device_$382_memory_ptr",
                         "typeString": "struct DataDevices.device memory"
                       }
                     },
                     "src": "589:38:1",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_struct$_device_$372_storage",
+                      "typeIdentifier": "t_struct$_device_$382_storage",
                       "typeString": "struct DataDevices.device storage ref"
                     }
                   },
-                  "id": 407,
+                  "id": 417,
                   "nodeType": "ExpressionStatement",
                   "src": "589:38:1"
                 }
               ]
             },
             "functionSelector": "0e34137c",
-            "id": 409,
+            "id": 419,
             "implemented": true,
             "kind": "function",
             "modifiers": [],
@@ -5541,17 +5541,17 @@
             "nameLocation": "497:10:1",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 389,
+              "id": 399,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 388,
+                  "id": 398,
                   "mutability": "mutable",
                   "name": "device_name",
                   "nameLocation": "522:11:1",
                   "nodeType": "VariableDeclaration",
-                  "scope": 409,
+                  "scope": 419,
                   "src": "508:25:1",
                   "stateVariable": false,
                   "storageLocation": "memory",
@@ -5560,7 +5560,7 @@
                     "typeString": "string"
                   },
                   "typeName": {
-                    "id": 387,
+                    "id": 397,
                     "name": "string",
                     "nodeType": "ElementaryTypeName",
                     "src": "508:6:1",
@@ -5575,12 +5575,12 @@
               "src": "507:27:1"
             },
             "returnParameters": {
-              "id": 390,
+              "id": 400,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "541:0:1"
             },
-            "scope": 469,
+            "scope": 479,
             "src": "488:146:1",
             "stateMutability": "nonpayable",
             "virtual": false,
@@ -5588,7 +5588,7 @@
           },
           {
             "body": {
-              "id": 426,
+              "id": 436,
               "nodeType": "Block",
               "src": "708:74:1",
               "statements": [
@@ -5600,14 +5600,14 @@
                           "typeIdentifier": "t_address",
                           "typeString": "address"
                         },
-                        "id": 418,
+                        "id": 428,
                         "isConstant": false,
                         "isLValue": false,
                         "isPure": false,
                         "lValueRequested": false,
                         "leftExpression": {
                           "expression": {
-                            "id": 415,
+                            "id": 425,
                             "name": "msg",
                             "nodeType": "Identifier",
                             "overloadedDeclarations": [],
@@ -5618,7 +5618,7 @@
                               "typeString": "msg"
                             }
                           },
-                          "id": 416,
+                          "id": 426,
                           "isConstant": false,
                           "isLValue": false,
                           "isPure": false,
@@ -5634,11 +5634,11 @@
                         "nodeType": "BinaryOperation",
                         "operator": "==",
                         "rightExpression": {
-                          "id": 417,
+                          "id": 427,
                           "name": "owner",
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
-                          "referencedDeclaration": 364,
+                          "referencedDeclaration": 374,
                           "src": "740:5:1",
                           "typeDescriptions": {
                             "typeIdentifier": "t_address",
@@ -5659,7 +5659,7 @@
                           "typeString": "bool"
                         }
                       ],
-                      "id": 414,
+                      "id": 424,
                       "name": "require",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [
@@ -5673,7 +5673,7 @@
                         "typeString": "function (bool) pure"
                       }
                     },
-                    "id": 419,
+                    "id": 429,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -5688,13 +5688,13 @@
                       "typeString": "tuple()"
                     }
                   },
-                  "id": 420,
+                  "id": 430,
                   "nodeType": "ExpressionStatement",
                   "src": "718:28:1"
                 },
                 {
                   "expression": {
-                    "id": 424,
+                    "id": 434,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -5705,24 +5705,24 @@
                     "src": "756:19:1",
                     "subExpression": {
                       "baseExpression": {
-                        "id": 421,
+                        "id": 431,
                         "name": "Devices",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 377,
+                        "referencedDeclaration": 387,
                         "src": "763:7:1",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_device_$372_storage_$",
+                          "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_device_$382_storage_$",
                           "typeString": "mapping(uint256 => struct DataDevices.device storage ref)"
                         }
                       },
-                      "id": 423,
+                      "id": 433,
                       "indexExpression": {
-                        "id": 422,
+                        "id": 432,
                         "name": "_id",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 411,
+                        "referencedDeclaration": 421,
                         "src": "771:3:1",
                         "typeDescriptions": {
                           "typeIdentifier": "t_uint256",
@@ -5736,7 +5736,7 @@
                       "nodeType": "IndexAccess",
                       "src": "763:12:1",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_struct$_device_$372_storage",
+                        "typeIdentifier": "t_struct$_device_$382_storage",
                         "typeString": "struct DataDevices.device storage ref"
                       }
                     },
@@ -5745,14 +5745,14 @@
                       "typeString": "tuple()"
                     }
                   },
-                  "id": 425,
+                  "id": 435,
                   "nodeType": "ExpressionStatement",
                   "src": "756:19:1"
                 }
               ]
             },
             "functionSelector": "be5fb212",
-            "id": 427,
+            "id": 437,
             "implemented": true,
             "kind": "function",
             "modifiers": [],
@@ -5760,17 +5760,17 @@
             "nameLocation": "678:13:1",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 412,
+              "id": 422,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 411,
+                  "id": 421,
                   "mutability": "mutable",
                   "name": "_id",
                   "nameLocation": "697:3:1",
                   "nodeType": "VariableDeclaration",
-                  "scope": 427,
+                  "scope": 437,
                   "src": "692:8:1",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -5779,7 +5779,7 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 410,
+                    "id": 420,
                     "name": "uint",
                     "nodeType": "ElementaryTypeName",
                     "src": "692:4:1",
@@ -5794,12 +5794,12 @@
               "src": "691:10:1"
             },
             "returnParameters": {
-              "id": 413,
+              "id": 423,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "708:0:1"
             },
-            "scope": 469,
+            "scope": 479,
             "src": "669:113:1",
             "stateMutability": "nonpayable",
             "virtual": false,
@@ -5807,7 +5807,7 @@
           },
           {
             "body": {
-              "id": 445,
+              "id": 455,
               "nodeType": "Block",
               "src": "887:68:1",
               "statements": [
@@ -5819,14 +5819,14 @@
                           "typeIdentifier": "t_address",
                           "typeString": "address"
                         },
-                        "id": 439,
+                        "id": 449,
                         "isConstant": false,
                         "isLValue": false,
                         "isPure": false,
                         "lValueRequested": false,
                         "leftExpression": {
                           "expression": {
-                            "id": 436,
+                            "id": 446,
                             "name": "msg",
                             "nodeType": "Identifier",
                             "overloadedDeclarations": [],
@@ -5837,7 +5837,7 @@
                               "typeString": "msg"
                             }
                           },
-                          "id": 437,
+                          "id": 447,
                           "isConstant": false,
                           "isLValue": false,
                           "isPure": false,
@@ -5853,11 +5853,11 @@
                         "nodeType": "BinaryOperation",
                         "operator": "==",
                         "rightExpression": {
-                          "id": 438,
+                          "id": 448,
                           "name": "owner",
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
-                          "referencedDeclaration": 364,
+                          "referencedDeclaration": 374,
                           "src": "919:5:1",
                           "typeDescriptions": {
                             "typeIdentifier": "t_address",
@@ -5878,7 +5878,7 @@
                           "typeString": "bool"
                         }
                       ],
-                      "id": 435,
+                      "id": 445,
                       "name": "require",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [
@@ -5892,7 +5892,7 @@
                         "typeString": "function (bool) pure"
                       }
                     },
-                    "id": 440,
+                    "id": 450,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -5907,47 +5907,47 @@
                       "typeString": "tuple()"
                     }
                   },
-                  "id": 441,
+                  "id": 451,
                   "nodeType": "ExpressionStatement",
                   "src": "897:28:1"
                 },
                 {
                   "expression": {
                     "expression": {
-                      "id": 442,
+                      "id": 452,
                       "name": "d",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 430,
+                      "referencedDeclaration": 440,
                       "src": "942:1:1",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_struct$_device_$372_memory_ptr",
+                        "typeIdentifier": "t_struct$_device_$382_memory_ptr",
                         "typeString": "struct DataDevices.device memory"
                       }
                     },
-                    "id": 443,
+                    "id": 453,
                     "isConstant": false,
                     "isLValue": true,
                     "isPure": false,
                     "lValueRequested": false,
                     "memberName": "data",
                     "nodeType": "MemberAccess",
-                    "referencedDeclaration": 371,
+                    "referencedDeclaration": 381,
                     "src": "942:6:1",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
                     }
                   },
-                  "functionReturnParameters": 434,
-                  "id": 444,
+                  "functionReturnParameters": 444,
+                  "id": 454,
                   "nodeType": "Return",
                   "src": "935:13:1"
                 }
               ]
             },
             "functionSelector": "2035be62",
-            "id": 446,
+            "id": 456,
             "implemented": true,
             "kind": "function",
             "modifiers": [],
@@ -5955,38 +5955,38 @@
             "nameLocation": "829:14:1",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 431,
+              "id": 441,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 430,
+                  "id": 440,
                   "mutability": "mutable",
                   "name": "d",
                   "nameLocation": "858:1:1",
                   "nodeType": "VariableDeclaration",
-                  "scope": 446,
+                  "scope": 456,
                   "src": "844:15:1",
                   "stateVariable": false,
                   "storageLocation": "memory",
                   "typeDescriptions": {
-                    "typeIdentifier": "t_struct$_device_$372_memory_ptr",
+                    "typeIdentifier": "t_struct$_device_$382_memory_ptr",
                     "typeString": "struct DataDevices.device"
                   },
                   "typeName": {
-                    "id": 429,
+                    "id": 439,
                     "nodeType": "UserDefinedTypeName",
                     "pathNode": {
-                      "id": 428,
+                      "id": 438,
                       "name": "device",
                       "nodeType": "IdentifierPath",
-                      "referencedDeclaration": 372,
+                      "referencedDeclaration": 382,
                       "src": "844:6:1"
                     },
-                    "referencedDeclaration": 372,
+                    "referencedDeclaration": 382,
                     "src": "844:6:1",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_struct$_device_$372_storage_ptr",
+                      "typeIdentifier": "t_struct$_device_$382_storage_ptr",
                       "typeString": "struct DataDevices.device"
                     }
                   },
@@ -5996,17 +5996,17 @@
               "src": "843:17:1"
             },
             "returnParameters": {
-              "id": 434,
+              "id": 444,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 433,
+                  "id": 443,
                   "mutability": "mutable",
                   "name": "",
                   "nameLocation": "-1:-1:-1",
                   "nodeType": "VariableDeclaration",
-                  "scope": 446,
+                  "scope": 456,
                   "src": "881:4:1",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -6015,7 +6015,7 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 432,
+                    "id": 442,
                     "name": "uint",
                     "nodeType": "ElementaryTypeName",
                     "src": "881:4:1",
@@ -6029,7 +6029,7 @@
               ],
               "src": "880:6:1"
             },
-            "scope": 469,
+            "scope": 479,
             "src": "820:135:1",
             "stateMutability": "view",
             "virtual": false,
@@ -6037,7 +6037,7 @@
           },
           {
             "body": {
-              "id": 467,
+              "id": 477,
               "nodeType": "Block",
               "src": "1054:68:1",
               "statements": [
@@ -6049,14 +6049,14 @@
                           "typeIdentifier": "t_address",
                           "typeString": "address"
                         },
-                        "id": 458,
+                        "id": 468,
                         "isConstant": false,
                         "isLValue": false,
                         "isPure": false,
                         "lValueRequested": false,
                         "leftExpression": {
                           "expression": {
-                            "id": 455,
+                            "id": 465,
                             "name": "msg",
                             "nodeType": "Identifier",
                             "overloadedDeclarations": [],
@@ -6067,7 +6067,7 @@
                               "typeString": "msg"
                             }
                           },
-                          "id": 456,
+                          "id": 466,
                           "isConstant": false,
                           "isLValue": false,
                           "isPure": false,
@@ -6083,11 +6083,11 @@
                         "nodeType": "BinaryOperation",
                         "operator": "==",
                         "rightExpression": {
-                          "id": 457,
+                          "id": 467,
                           "name": "owner",
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
-                          "referencedDeclaration": 364,
+                          "referencedDeclaration": 374,
                           "src": "1086:5:1",
                           "typeDescriptions": {
                             "typeIdentifier": "t_address",
@@ -6108,7 +6108,7 @@
                           "typeString": "bool"
                         }
                       ],
-                      "id": 454,
+                      "id": 464,
                       "name": "require",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [
@@ -6122,7 +6122,7 @@
                         "typeString": "function (bool) pure"
                       }
                     },
-                    "id": 459,
+                    "id": 469,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -6137,38 +6137,38 @@
                       "typeString": "tuple()"
                     }
                   },
-                  "id": 460,
+                  "id": 470,
                   "nodeType": "ExpressionStatement",
                   "src": "1064:28:1"
                 },
                 {
                   "expression": {
-                    "id": 465,
+                    "id": 475,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
                     "lValueRequested": false,
                     "leftHandSide": {
                       "expression": {
-                        "id": 461,
+                        "id": 471,
                         "name": "d",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 449,
+                        "referencedDeclaration": 459,
                         "src": "1102:1:1",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_struct$_device_$372_memory_ptr",
+                          "typeIdentifier": "t_struct$_device_$382_memory_ptr",
                           "typeString": "struct DataDevices.device memory"
                         }
                       },
-                      "id": 463,
+                      "id": 473,
                       "isConstant": false,
                       "isLValue": true,
                       "isPure": false,
                       "lValueRequested": true,
                       "memberName": "data",
                       "nodeType": "MemberAccess",
-                      "referencedDeclaration": 371,
+                      "referencedDeclaration": 381,
                       "src": "1102:6:1",
                       "typeDescriptions": {
                         "typeIdentifier": "t_uint256",
@@ -6178,11 +6178,11 @@
                     "nodeType": "Assignment",
                     "operator": "=",
                     "rightHandSide": {
-                      "id": 464,
+                      "id": 474,
                       "name": "data",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 451,
+                      "referencedDeclaration": 461,
                       "src": "1111:4:1",
                       "typeDescriptions": {
                         "typeIdentifier": "t_uint256",
@@ -6195,14 +6195,14 @@
                       "typeString": "uint256"
                     }
                   },
-                  "id": 466,
+                  "id": 476,
                   "nodeType": "ExpressionStatement",
                   "src": "1102:13:1"
                 }
               ]
             },
             "functionSelector": "f0dbdc6f",
-            "id": 468,
+            "id": 478,
             "implemented": true,
             "kind": "function",
             "modifiers": [],
@@ -6210,38 +6210,38 @@
             "nameLocation": "996:17:1",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 452,
+              "id": 462,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 449,
+                  "id": 459,
                   "mutability": "mutable",
                   "name": "d",
                   "nameLocation": "1028:1:1",
                   "nodeType": "VariableDeclaration",
-                  "scope": 468,
+                  "scope": 478,
                   "src": "1014:15:1",
                   "stateVariable": false,
                   "storageLocation": "memory",
                   "typeDescriptions": {
-                    "typeIdentifier": "t_struct$_device_$372_memory_ptr",
+                    "typeIdentifier": "t_struct$_device_$382_memory_ptr",
                     "typeString": "struct DataDevices.device"
                   },
                   "typeName": {
-                    "id": 448,
+                    "id": 458,
                     "nodeType": "UserDefinedTypeName",
                     "pathNode": {
-                      "id": 447,
+                      "id": 457,
                       "name": "device",
                       "nodeType": "IdentifierPath",
-                      "referencedDeclaration": 372,
+                      "referencedDeclaration": 382,
                       "src": "1014:6:1"
                     },
-                    "referencedDeclaration": 372,
+                    "referencedDeclaration": 382,
                     "src": "1014:6:1",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_struct$_device_$372_storage_ptr",
+                      "typeIdentifier": "t_struct$_device_$382_storage_ptr",
                       "typeString": "struct DataDevices.device"
                     }
                   },
@@ -6249,12 +6249,12 @@
                 },
                 {
                   "constant": false,
-                  "id": 451,
+                  "id": 461,
                   "mutability": "mutable",
                   "name": "data",
                   "nameLocation": "1036:4:1",
                   "nodeType": "VariableDeclaration",
-                  "scope": 468,
+                  "scope": 478,
                   "src": "1031:9:1",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -6263,7 +6263,7 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 450,
+                    "id": 460,
                     "name": "uint",
                     "nodeType": "ElementaryTypeName",
                     "src": "1031:4:1",
@@ -6278,19 +6278,19 @@
               "src": "1013:28:1"
             },
             "returnParameters": {
-              "id": 453,
+              "id": 463,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "1054:0:1"
             },
-            "scope": 469,
+            "scope": 479,
             "src": "987:135:1",
             "stateMutability": "view",
             "virtual": false,
             "visibility": "public"
           }
         ],
-        "scope": 470,
+        "scope": 480,
         "src": "58:1066:1",
         "usedErrors": []
       }
@@ -6305,12 +6305,12 @@
     "5777": {
       "events": {},
       "links": {},
-      "address": "0xFA14a8D114b8b96fBE66866719F7181B820a9BEe",
-      "transactionHash": "0xed22543608ad4e55064ee8f445431ea5f3e1c57da3d64d6f0fe76d20fd40e90a"
+      "address": "0x55001cf730e77D490CdA608E81Df00a5518b6935",
+      "transactionHash": "0x6affd260fc9b9e1d165b17c22ae4648ea5007576e9d2b742090daa51566508ff"
     }
   },
   "schemaVersion": "3.4.7",
-  "updatedAt": "2022-04-24T08:26:28.111Z",
+  "updatedAt": "2022-04-24T19:12:38.505Z",
   "networkType": "ethereum",
   "devdoc": {
     "kind": "dev",

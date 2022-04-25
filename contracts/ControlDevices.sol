@@ -64,6 +64,9 @@ contract ControlDevices
     function remove_device(uint pin) public
     {
         require(msg.sender == owner);
+        if(Devices[pin].status) {
+            change_device_status(pin);
+        }
         Devices[pin].power = false;
     }
    
