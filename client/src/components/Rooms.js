@@ -4,196 +4,296 @@ import FormGroup from "@mui/material/FormGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Switch from "@material-ui/core/Switch";
 import axios from "axios";
+import Button from '@mui/material/Button';
+import Snackbar from '@mui/material/Snackbar';
+import Slide from '@mui/material/Slide';
+import Alert from '@mui/material/Alert';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
+
 import {
   addDevice,
+  addRoomAndDevices,
   changeDeviceStatus,
   changeRoomStatus,
+  deleteRoomAndDevices,
+  getCurrentActiveTime,
   getDeviceStatus,
+  getNRooms,
   getRoomStatus,
+  getRoomThres,
+  getTotalTime,
   removeDevice,
 } from "../Web3Client";
 
 function Rooms() {
-  const [room1, setRoom1] = useState(false);
-  const [room2, setRoom2] = useState(false);
-  const [room3, setRoom3] = useState(false);
-  const [room4, setRoom4] = useState(false);
-  const [fanRoom1, setFanRoom1] = useState(false);
-  const [fanRoom2, setFanRoom2] = useState(false);
-  const [fanRoom3, setFanRoom3] = useState(false);
-  const [fanRoom4, setFanRoom4] = useState(false);
-  const [lightRoom1, setLightRoom1] = useState(false);
-  const [lightRoom2, setLightRoom2] = useState(false);
-  const [lightRoom3, setLightRoom3] = useState(false);
-  const [lightRoom4, setLightRoom4] = useState(false);
 
-  // lifecycle function for called before the component rendering
+  const fanVoltage = 4.5,
+  fanCurrent = 17,
+  lightVoltage = 1.78,
+  lightCurrent = 4.5;
+
+  const [showToast,setToast] = useState(false);
+  const [msg,setMsg] = useState("");
+  const [showModal,setModal] = useState(false);
+  const [showDialog,setDialog] = useState(false);
+  
+
+  const [rooms,setRooms] = useState([]);
+  const [N, setN] = useState(0);
+  const [E, setE] = useState(0);
+  const [T, setT] = useState(0);
+  const [C, setC] = useState(7.9398387763);
+  const [MT, setMT] = useState(50);
+  const [device, setDevice] = useState('Room 1 [Light]');
+  const [deviceEnergy, setDeviceEnergy] = useState(1.043533366);
+
+  // function delay(delayInms) {
+  //   return new Promise(resolve => {
+  //     setTimeout(() => {
+  //       resolve(2);
+  //     }, delayInms);
+  //   });
+  // }
+
+  const thresCheck=()=>{
+    getNRooms().then((res)=>{
+      let n=parseInt(res);
+      for(let i=1;i<=n;i++){
+        getRoomThres(i).then((res)=>{
+          let t = parseInt(res);
+          let fEnergy, lEnergy;
+          getTotalTime(2*i).then((res)=>{
+            fEnergy=fanVoltage*fanCurrent*parseInt(res)/3600;
+            getTotalTime(2*i+1).then(async (res)=>{
+              lEnergy=lightVoltage*lightCurrent*parseInt(res)/3600;
+              let tEnergy = fEnergy+lEnergy;
+              if(tEnergy > t) {
+                console.log(`called ${i}`);
+                setN(i);
+                setE(tEnergy);
+                setT(t);
+                setModal(true);
+              }
+            }); 
+          });
+        });
+      }
+    });
+    setTimeout(thresCheck, 30000);
+  }
+
+  const loadBalancing = (p) => {
+    getNRooms().then((res) => {
+      const mainThres = 50;
+      let n = parseInt(res);
+      for(let i=1; i<n; i++) {
+        getDeviceStatus(2*i).then((res) => {
+          if(Boolean(res)) {
+            getCurrentActiveTime(2*i).then((res) => {
+              let compEnergy = fanVoltage*fanCurrent*parseInt(res)/3600;
+              if(deviceEnergy < compEnergy) {
+                setDeviceEnergy(compEnergy);
+                setDevice(`Room ${i} [Fan]`);
+              }
+              setC(C+compEnergy);
+            });
+
+          }
+        });
+        getDeviceStatus(2*i+1).then((res) => {
+          if(Boolean(res)) {
+            let compEnergy = lightVoltage*lightCurrent*parseInt(res)/3600;
+            if(deviceEnergy < compEnergy) {
+              setDeviceEnergy(compEnergy);
+                setDevice(`Room ${i} [Light]`);
+            }
+            setC(C+compEnergy);
+          }
+          if(i === n-1) {
+            console.log(C, "   jjeinfe  ", mainThres);
+            if(C > mainThres) {
+              console.log(C, "   jjeinfe  ", mainThres);
+              console.log(C, " ", device, " ", deviceEnergy);
+              setMT(mainThres);
+              setDialog(true);
+            } else {
+              changeDeviceStatus(p).then((tnx) => {
+                let n1 = parseInt(p/2);
+                let copyrooms = [...rooms];
+                if(p%2 === 0) {
+                  copyrooms[n1-1].fan = !Boolean(res);
+                  setRooms(copyrooms);
+                } else {
+                  copyrooms[n1-1].light = !Boolean(res);
+                  setRooms(copyrooms);
+                }
+                if (!res) {
+                  on_led(p);
+                } else {
+                  off_led(p);
+                }
+                console.log(tnx);
+                console.log(`Status changed pin(${p})`);
+              });
+            }
+          }
+        });
+      }
+    });
+  }
+
+  const addRoom = () =>{
+    if(rooms.length === 6) {
+      setMsg("Can't add more than 6 rooms");
+      setToast(true);
+      return;
+    }
+    let copyrooms = [...rooms];
+    addRoomAndDevices().then((res) => {
+      console.log(res);
+      copyrooms.push({
+        id: copyrooms.length+1,
+        name: `Room ${copyrooms.length+1}`,
+        state: false,
+        fan: false,
+        light: false,
+      });
+      console.log(copyrooms);
+      setRooms(copyrooms);
+      console.log(rooms);
+    });
+  };
+
+  const delete_room = (idx) => {
+    let copyrooms = [...rooms];
+    deleteRoomAndDevices(idx).then((res) => {
+      console.log(res);
+      console.log(`Room ${idx} is deleted and Upadating other rooms.`);
+      copyrooms.splice(idx-1, 1);
+      for(let i=idx-1; i<copyrooms.length; i++) {
+        copyrooms[i].id = i+1;
+        copyrooms[i].name = `Room ${i+1}`
+      }
+      console.log(copyrooms);
+      setRooms(copyrooms);
+    });
+  }
+
+ 
+
+  const renderRooms = () =>{
+    let l = rooms.length;
+    let rows = [];
+    let i = 0;
+    while(i<l){
+      if(i%3 === 0 || i<3){
+        rows.push(
+          <div className="row" key={i}>
+            {
+              rooms.slice(i,i+3).map(e => {
+                // console.log(e);
+                return (
+                <div className="rom" key={e.id}>
+                  <div className="rtit">
+                    <span className="roo">{e.name}</span>
+                    <span className="material-symbols-outlined" style={{marginRight:"20px",cursor:"pointer"}} onClick={()=>{delete_room(e.id)}}>
+                      delete
+                    </span>
+                  </div>
+                  <div className="components">
+                    <FormGroup>
+                      <FormControlLabel
+                        onChange={() => changeState(e.id)}
+                        control={<Switch color="primary" />}
+                        label="Power"
+                        checked={e.state}
+                      />
+                      {e.state && 
+                        <div>
+                          <FormControlLabel
+                            onChange={() => {changeStatus(2*e.id);
+                            console.log(2*e.id);}}
+                            control={<Switch color="primary" />}
+                            label="Fan"
+                            checked={e.fan}
+                          />
+                          <br />
+                          <FormControlLabel
+                            onChange={() => changeStatus(2*e.id+1)}
+                            control={<Switch color="primary" />}
+                            label="Light"
+                            checked={e.light}
+                          />
+                        </div>
+                      }
+                    </FormGroup>
+                  </div>
+                </div>)
+              })
+            }
+          </div>
+        );
+        i+=3;
+      }
+    }
+    return (<div className="main2">
+      {rows}
+    </div>);
+    
+  };
+
+
   useEffect(() => {
-    // fetch power status
-    getRoomStatus(1).then((res) => {
-      console.log("Power status of room1 :  " + Boolean(res));
-      // setting the state of room1
-      setRoom1(Boolean(res));
-      if(Boolean(res)) {
-        getDeviceStatus(2).then((res) => {
-          console.log("Fan status of room1 :  " + Boolean(res));
-          setFanRoom1(Boolean(res))
+    let copyrooms = [];
+    getNRooms().then((res) => {
+      let n = parseInt(res);
+      console.log("Total No. of Rooms : ", n);
+      for(let i=0; i<n; i++) {
+        copyrooms[i] = {
+          id: copyrooms.length+1,
+          name: `Room ${i+1}`,
+          state:false,
+          fan: false,
+          light:false,
+        }
+  
+        getRoomStatus(i+1).then((res) => {
+          
+          console.log(`Power status of room ${i+1} : ${Boolean(res)}`);
+          // setting the state of room1
+          copyrooms[i].state = Boolean(res);
+  
+          if(Boolean(res)) {
+            getDeviceStatus(2*(i+1)).then((res) => {
+              console.log(`Fan status of room ${i+1} : ${Boolean(res)}`);
+              copyrooms[i].fan = Boolean(res);
+            });
+            getDeviceStatus(2*(i+1)+1).then((res) => {
+              console.log(`Light status of room ${i+1} : ${Boolean(res)}`);
+              copyrooms[i].light = Boolean(res);
+              if(i === n-1) {
+                setRooms(copyrooms);
+                console.log(copyrooms);
+              }
+            });
+          } else {
+            copyrooms[i].fan = false;
+            copyrooms[i].light = false;
+              if(i === n-1) {
+                setRooms(copyrooms);
+                console.log(copyrooms);
+              }
+          }
+         
         });
-        getDeviceStatus(3).then((res) => {
-          console.log("Light status of room1 :  " + Boolean(res));
-          setLightRoom1(Boolean(res));
-        });
-      } else {
-        setFanRoom1(false);
-        setLightRoom1(false);
       }
     });
-
-    getRoomStatus(2).then((res) => {
-      console.log("Power status of room2 :  " + Boolean(res));
-      // setting the state of room1
-      setRoom2(Boolean(res));
-      if(Boolean(res)) {
-        getDeviceStatus(4).then((res) => {
-          console.log("Fan status of room2 :  " + Boolean(res));
-          setFanRoom2(Boolean(res));
-        });
-        getDeviceStatus(5).then((res) => {
-          console.log("Light status of room2 :  " + Boolean(res));
-          setLightRoom2(Boolean(res));
-        });
-      } else {
-        setFanRoom2(false);
-        setLightRoom2(false);
-      }
-    });
-
-    getRoomStatus(3).then((res) => {
-      console.log("Power status of room3 :  " + Boolean(res));
-      // setting the state of room1
-      setRoom3(Boolean(res));
-      if(Boolean(res)) {
-        getDeviceStatus(6).then((res) => {
-          console.log("Fan status of room3 :  " + Boolean(res));
-          setFanRoom3(Boolean(res))
-        });
-        getDeviceStatus(7).then((res) => {
-          console.log("Light status of room3 :  " + Boolean(res));
-          setLightRoom3(Boolean(res));
-        });
-      } else {
-        setFanRoom3(false);
-        setLightRoom3(false);
-      }
-    });
-
-    getRoomStatus(4).then((res) => {
-      console.log("Power status of room4 :  " + Boolean(res));
-      // setting the state of room1
-      setRoom4(Boolean(res));
-      if(Boolean(res)) {
-        getDeviceStatus(8).then((res) => {
-          console.log("Fan status of room4 :  " + Boolean(res));
-          setFanRoom4(Boolean(res))
-        });
-        getDeviceStatus(9).then((res) => {
-          console.log("Light status of room4 :  " + Boolean(res));
-          setLightRoom4(Boolean(res));
-        });
-      } else {
-        setFanRoom4(false);
-        setLightRoom4(false);
-      }
-    });
-  });
-
-  function renderRoom1Button() {
-    if (room1 === true) {
-      return (
-        <div>
-          <FormControlLabel
-            onChange={() => changeStatus(2)}
-            control={<Switch color="primary" />}
-            label="Fan"
-            checked={fanRoom1}
-          />
-          <br />
-          <FormControlLabel
-            onChange={() => changeStatus(3)}
-            control={<Switch color="primary" />}
-            label="Light"
-            checked={lightRoom1}
-          />
-        </div>
-      );
-    }
-  }
-
-  function renderRoom2Button() {
-    if (room2 === true) {
-      return (
-        <div>
-          <FormControlLabel
-            onChange={() => changeStatus(4)}
-            control={<Switch color="primary" />}
-            label="Fan"
-            checked={fanRoom2}
-          />
-          <br />
-          <FormControlLabel
-            onChange={() => changeStatus(5)}
-            control={<Switch color="primary" />}
-            label="Light"
-            checked={lightRoom2}
-          />
-        </div>
-      );
-    }
-  }
-
-  function renderRoom3Button() {
-    if (room3 === true) {
-      return (
-        <div>
-          <FormControlLabel
-            onChange={() => changeStatus(6)}
-            control={<Switch color="primary" />}
-            label="Fan"
-            checked={fanRoom3}
-          />
-          <br />
-          <FormControlLabel
-            onChange={() => changeStatus(7)}
-            control={<Switch color="primary" />}
-            label="Light"
-            checked={lightRoom3}
-          />
-        </div>
-      );
-    }
-  }
-
-  function renderRoom4Button() {
-    if (room4 === true) {
-      return (
-        <div>
-          <FormControlLabel
-            onChange={() => changeStatus(8)}
-            control={<Switch color="primary" />}
-            label="Fan"
-            checked={fanRoom4}
-          />
-          <br />
-          <FormControlLabel
-            onChange={() => changeStatus(9)}
-            control={<Switch color="primary" />}
-            label="Light"
-            checked={lightRoom4}
-          />
-        </div>
-      );
-    }
-  }
+    thresCheck();
+  }, []);
 
   function on_led(p) {
     axios.get(`http://localhost:5000/ledon?pin=${p}`).then((res) => {
@@ -210,48 +310,26 @@ function Rooms() {
   function changeState(n) {
     getRoomStatus(n).then((res) => {
       console.log("Current Room State: " + res);
+      let copyrooms = [...rooms];
       if (res) {
-        
+
         removeDevice(2 * n).then((tnx) => {
           console.log(tnx);
           console.log(`Device at pin(${2 * n}) is removed.`);
-          if(n === 1) {
-            setFanRoom1(false);
-          } else if(n === 2) {
-            setFanRoom2(false);
-          } else if(n === 3) {
-            setFanRoom3(false);
-          } else {
-            setFanRoom4(false);
-          }
+          copyrooms[n-1].fan = false;
         });
 
         removeDevice(2 * n + 1).then((tnx) => {
           console.log(tnx);
           console.log(`Device at pin(${2 * n + 1}) is removed.`);
-          if(n === 1) {
-            setLightRoom1(false);
-          } else if(n === 2) {
-            setLightRoom2(false);
-          } else if(n === 3) {
-            setLightRoom3(false);
-          } else {
-            setLightRoom4(false);
-          }
+          copyrooms[n-1].light = false;
         });
 
         changeRoomStatus(n).then((tnx) => {
           console.log(tnx);
           console.log(`State changed Room(${n})`);
-          if(n === 1) {
-            setRoom1(false);
-          } else if(n === 2) {
-            setRoom2(false);
-          } else if(n === 3) {
-            setRoom3(false);
-          } else {
-            setRoom4(false);
-          }
+          copyrooms[n-1].state = false;
+          setRooms(copyrooms);
         });
         
       } else {
@@ -259,32 +337,19 @@ function Rooms() {
         addDevice(2 * n).then((tnx) => {
           console.log(tnx);
           console.log(`Device at pin(${2 * n}) is added.`);
+          copyrooms[n-1].fan = false;
         });
         addDevice(2 * n + 1).then((tnx) => {
           console.log(tnx);
           console.log(`Device at pin(${2 * n + 1}) is added.`);
+          copyrooms[n-1].light = false;
         });
 
         changeRoomStatus(n).then((tnx) => {
           console.log(tnx);
           console.log(`State changed Room(${n})`);
-          if(n === 1) {
-            setFanRoom1(false);
-            setLightRoom1(false);
-            setRoom1(true);
-          } else if(n === 2) {
-            setFanRoom2(false);
-            setLightRoom2(false);
-            setRoom2(true);
-          } else if(n === 3) {
-            setFanRoom3(false);
-            setLightRoom3(false);
-            setRoom3(true);
-          } else {
-            setFanRoom4(false);
-            setLightRoom4(false);
-            setRoom4(true);
-          }
+          copyrooms[n-1].state = true;
+          setRooms(copyrooms);
         });
         
       }
@@ -293,133 +358,162 @@ function Rooms() {
   }
 
   function changeStatus(p) {
-    let n = parseInt(p/2);
-    getRoomStatus(n).then((res) => {
+    let n1 = parseInt(p/2);
+    console.log("Not overloaded...")
+    getRoomStatus(n1).then((res) => {
       if (res) {
-        console.log(`Room ${n} is powered on`);
+        let copyrooms = [...rooms];
+        console.log(`Room ${n1} is powered on`);
         getDeviceStatus(p).then((res) => {
           console.log("Device Status: " + res);
-          changeDeviceStatus(p).then((tnx) => {
-            if(n === 1) {
+          if(!Boolean(res)) {
+            loadBalancing(p);
+          } else {
+            changeDeviceStatus(p).then((tnx) => {
               if(p%2 === 0) {
-                setFanRoom1(!res);
+                copyrooms[n1-1].fan = !Boolean(res);
+                setRooms(copyrooms);
               } else {
-                setLightRoom1(!res);
+                copyrooms[n1-1].light = !Boolean(res);
+                setRooms(copyrooms);
               }
-            } else if(n === 2) {
-              if(p%2 === 0) {
-                setFanRoom2(!res);
+              if (!res) {
+                on_led(p);
               } else {
-                setLightRoom2(!res);
+                off_led(p);
               }
-            } else if(n === 3) {
-              if(p%2 === 0) {
-                setFanRoom3(!res);
-              } else {
-                setLightRoom3(!res);
-              }
-            } else {
-              if(p%2 === 0) {
-                setFanRoom4(!res);
-              } else {
-                setLightRoom4(!res);
-              }
-            }
-            if (!res) {
-              on_led(p);
-            } else {
-              off_led(p);
-            }
-            console.log(tnx);
-            
-            console.log(`Status changed pin(${p})`);
-          });
+              console.log(tnx);
+              console.log(`Status changed pin(${p})`);
+            });
+          }
         });
       } else {
-        console.log(`Room ${n} is powered off, Operation not posible.`);
+        console.log(`Room ${n1} is powered off, Operation not posible.`);
       }
     });
+
+    // getNRooms().then((res) => {
+    //   let temp = 0, temp2 = '';
+    //   let total = 0;
+    //   const mainThres = 50;
+    //   let n = parseInt(res);
+    //   for(let i=1; i<n; i++) {
+    //     getDeviceStatus(2*i).then((res) => {
+    //       if(Boolean(res)) {
+    //         getCurrentActiveTime(2*i).then((res) => {
+    //           let compEnergy = fanVoltage*fanCurrent*parseInt(res)/3600;
+    //           if(temp < compEnergy) {
+    //             temp = compEnergy;
+    //             temp2 = `Room ${i} [Fan]`;
+    //           }
+    //           total += compEnergy;
+    //         });
+
+    //       }
+    //     });
+    //     getDeviceStatus(2*i+1).then((res) => {
+    //       if(Boolean(res)) {
+    //         let compEnergy = lightVoltage*lightCurrent*parseInt(res)/3600;
+    //         if(temp < compEnergy) {
+    //           temp = compEnergy;
+    //           temp2 = `Room ${i} [Light]`;
+    //         }
+    //         total += compEnergy;
+    //       }
+    //       if(i === n-1) {
+    //         if(total < mainThres) {
+    //           console.log("overloaded...")
+    //           setC(total);
+    //           setMT(mainThres);
+    //           setDevice(temp2);
+    //           setDeviceEnergy(temp);
+    //           setDialog(true);
+    //         }
+    //       }
+    //     });
+    //   }
+    // });
   }
 
-  // function getStatus(n) {
-  //   getRoomStatus(n).then((res) => {
-  //     console.log("jngf  "+ Boolean(res));
-  //     return true;
-  //   });
-  // }
+  const closeModal = () => {
+    setModal(false);
+  }
+
+  const closeDialog = () => {
+    setDialog(false);
+  }
 
   return (
     <div className="App">
+      <Snackbar
+            open={showToast}
+            onClose={()=>setToast(false)}
+            TransitionComponent={Slide}
+            message={msg}
+            autoHideDuration={3000}
+            key={'created'}
+            disableWindowBlurListener={true}
+            sx={{ width: "350px" }}
+        >
+            <Alert onClose={()=>setToast(false)} variant="filled" severity="error" sx={{ width: '100%' }} >
+            {msg}
+            </Alert>
+        </Snackbar>
+        <Dialog
+          open={showModal}
+          onClose={closeModal}
+          aria-labelledby="alert-dialog-title"
+          aria-describedby="alert-dialog-description"
+        >
+        <DialogTitle id="alert-dialog-title">
+          {"Room Energy Threshold Alert"}
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            You Energy Consumtion has exceeded the Energy Threshold Limit of Room{N} <br/> Energy Consumed: {E} <br/> Room Threshold: {T}
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          {/* <Button onClick={() => {closeModalDisagree(N)}}>NO</Button> */}
+          <Button onClick={closeModal} autoFocus>
+            OK
+          </Button>
+        </DialogActions>
+      </Dialog>
+      <Dialog
+          open={showDialog}
+          onClose={closeDialog}
+          aria-labelledby="alert-dialog-title"
+          aria-describedby="alert-dialog-description"
+        >
+        <DialogTitle id="alert-dialog-title">
+          {"Overload Alert"}
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+          The current load on the main is exceeded the threshold limit.<br/>
+          Current load: {C} <br/>
+          Main Threshold: {MT} <br/><br/>
+          To use this device, turn off the {device} which is consuming {deviceEnergy} energy.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          {/* <Button onClick={() => {closeModalDisagree(N)}}>NO</Button> */}
+          <Button onClick={closeDialog} autoFocus>
+            OK
+          </Button>
+        </DialogActions>
+      </Dialog>
       <Navbar />
       <div className="main2">
-        <div className="rw">
-          <div className="rom">
-            <div className="rtit">
-              <span>ROOM1</span>
-            </div>
-            <div className="components">
-              <FormGroup>
-                <FormControlLabel
-                  onChange={() => changeState(1)}
-                  control={<Switch color="primary" />}
-                  label="Power"
-                  checked={room1}
-                />
-                {renderRoom1Button()}
-              </FormGroup>
-            </div>
-          </div>
-          <div className="rom">
-            <div className="rtit">
-              <span>ROOM2</span>
-            </div>
-            <div className="components">
-              <FormGroup>
-                <FormControlLabel
-                  onChange={() => changeState(2)}
-                  control={<Switch color="primary" />}
-                  label="Power"
-                  checked={room2}
-                />
-                {renderRoom2Button()}
-              </FormGroup>
-            </div>
-          </div>
+
+        <div className="btnbox">
+            <button className="addRoom" style={{marginRight:"20px",cursor:"pointer"}} onClick={()=>addRoom()}> Add Room </button>
+
         </div>
-        <div className="rw">
-          <div className="rom">
-            <div className="rtit">
-              <span>ROOM3</span>
-            </div>
-            <div className="components">
-              <FormGroup>
-                <FormControlLabel
-                  onChange={() => changeState(3)}
-                  control={<Switch color="primary" />}
-                  label="Power"
-                  checked={room3}
-                />
-                {renderRoom3Button()}
-              </FormGroup>
-            </div>
-          </div>
-          <div className="rom">
-            <div className="rtit">
-              <span>ROOM4</span>
-            </div>
-            <div className="components">
-              <FormGroup>
-                <FormControlLabel
-                  onChange={() => changeState(4)}
-                  control={<Switch color="primary" />}
-                  label="Power"
-                  checked={room4}
-                />
-                {renderRoom4Button()}
-              </FormGroup>
-            </div>
-          </div>
-        </div>
+        {
+          renderRooms()
+        }
       </div>
     </div>
   );

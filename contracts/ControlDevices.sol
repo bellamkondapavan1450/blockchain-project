@@ -17,29 +17,51 @@ contract ControlDevices
         uint startTime;
         uint totalTime;
     }
+
+    struct room {
+        bool status;
+        uint thres; //room's threshold
+    }
    
     // map to store our data with Devices info in it
    
     mapping(uint=>device) public Devices;
-    mapping(uint=>bool) public Room;
+    mapping(uint=>room) public Room;
+    uint index;
    
     // setting the owner
    
     constructor()
     {
         owner = msg.sender;
-        Room[1] = false;
-        Devices[2] = device("Fan", false, false, 0, 0);
-        Devices[3] = device("Light", false, false, 0, 0);
-        Room[2] = false;
-        Devices[4] = device("Fan", false, false, 0, 0);
-        Devices[5] = device("Light", false, false, 0, 0);
-        Room[3] = false;
-        Devices[6] = device("Fan", false, false, 0, 0);
-        Devices[7] = device("Light", false, false, 0, 0);
-        Room[4] = false;
-        Devices[8] = device("Fan", false, false, 0, 0);
-        Devices[9] = device("Light", false, false, 0, 0);
+    }
+
+    function addRoomAndDevices() public {
+        require(msg.sender == owner);
+        Room[++index] = room(false, 10);
+        Devices[2*index] = device("Fan", false, false, 0, 0);
+        Devices[2*index+1] = device("Light", false, false, 0, 0);
+    }
+
+    function deleteRoomAndDevices(uint idx) public {
+        require(msg.sender == owner);
+        for (uint256 i = idx; i < index; i++) {
+            Room[i] = Room[i+1];
+            Devices[2*i] = Devices[2*(i+1)];
+            Devices[2*i+1] = Devices[2*(i+1)+1];
+        }
+        delete(Room[index]);
+        delete(Devices[2*index]);
+        delete(Devices[2*index+1]);
+        --index;
+    }
+
+    function getNRooms() public view returns(uint) {
+        return index;
+    }
+
+    function getCurrentActiveTime(uint pin) public view returns(uint) {
+        return block.timestamp - Devices[pin].startTime;
     }
 
     function getTotalTime(uint pin) public view returns(uint) {
@@ -101,20 +123,25 @@ contract ControlDevices
 
     function room_status(uint n) public view returns(bool)
     {
-        return Room[n];
+        return Room[n].status;
+    }
+
+    function room_thres(uint n) public view returns(uint)
+    {
+        return Room[n].thres;
     }
    
     // changing the Room's status
    
     function change_room_status(uint n) public
     {
-        if(Room[n]==true)
+        if(Room[n].status==true)
         {
-            Room[n] = false;
+            Room[n].status = false;
         }
         else
         {
-            Room[n] = true;
+            Room[n].status = true;
         }
     }
    

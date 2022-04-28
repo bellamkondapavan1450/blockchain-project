@@ -16,11 +16,12 @@ app.get("/getData", (req, res) => {
         sensor.on("change", function(res) {
             console.log(res);
         });
-        
         res.json("Done");
     } else {
         res.json("Board not ready");
     }
+    
+    // res.json(0);
 });
 
 app.get("/ledon", (req, res) => {
@@ -54,7 +55,7 @@ app.get("/hum", (req, res) => {
         hygrometer.on("change", function() {
             console.log("Hygrometer");
             console.log("  relative humidity : ", this.relativeHumidity);
-            req.json(this.relativeHumidity);
+            res.json(this.relativeHumidity);
         });
     } else {
         res.json("Board not ready");
@@ -73,7 +74,7 @@ app.get("/temp", (req, res) => {
             console.log("  celsius      : ", celsius);
             console.log("  fahrenheit   : ", fahrenheit);
             console.log("  kelvin       : ", kelvin);
-            req.json(celsius);
+            res.json(celsius);
         });
     } else {
         res.json("Board not ready");

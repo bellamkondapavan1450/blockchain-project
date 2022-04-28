@@ -89,11 +89,23 @@ span {
   /* background-color: white; */
   /* background-image: linear-gradient(-20deg, #fc6076 0%, #ff9a44 100%); */
 }
+.btnbox{
+  width: 100%;
+  height: 50px;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  /* background-color: yellow; */
 
-/* #row{
+}
+
+.row{
   flex:0.33;
-  border: 3px solid #111;
-} */
+  display: flex;
+  justify-content: space-evenly;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
 .mb {
   width: 7vw;
   height: 5vh;
@@ -222,6 +234,7 @@ span {
   flex: 0.85;
   max-width: 85vw;
   flex-direction: column;
+  background-color: yellow;
   background-image: linear-gradient(-20deg, #2b5876 0%, #4e4376 100%);
   /* background-image: linear-gradient(to right, #243949 0%, #517fa4 100%); */
   background-image: linear-gradient(-45deg, #ffc796 0%, #ff6b95 100%);
@@ -236,8 +249,31 @@ span {
   align-items: center;
 }
 
+/* .delete {
+  cursor: pointer;
+} */
+
+.addRoom {
+  border: none;
+  border-radius: 10px;
+  font-size:16px;
+  font-weight: bold;
+  background-color: white;
+  color: rgb(255, 133, 76);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px 30px;
+}
+
+.addRoom:hover {
+  color: white;
+  background-color: black;
+  /* border: 1px solid white; */
+}
+
 .rom {
-  width: 30vw;
+  width: 30%;
   height: 40vh;
   background-color: white;
   /* margin-right: 10vw; */
@@ -247,13 +283,14 @@ span {
 }
 .rtit {
   background-color: #111;
-  flex: 0.2;
   border-radius: 10px 10px 0 0;
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: space-between;
   color: white;
   font-size: x-large;
+  flex-direction: row;
+  padding: 5px 0 5px 20px ;
 }
 .g1 {
   max-height: 45vh;

@@ -97,3 +97,38 @@ export const getTotalTime = async (pin) => {
     from: selectedAccount,
   });
 };
+
+export const addRoomAndDevices = async () => {
+  if(!isReady) {
+    await init();
+  }
+    return contract.methods.addRoomAndDevices().send({ from: selectedAccount });
+}
+
+export const deleteRoomAndDevices = async (n) => {
+  if(!isReady) {
+    await init();
+  }
+  return contract.methods.deleteRoomAndDevices(n).send({ from: selectedAccount });
+}
+
+export const getNRooms = async () => {
+  if(!isReady) {
+    await init();
+  }
+  return contract.methods.getNRooms().call({ from: selectedAccount })
+}
+
+export const getRoomThres = async (n) => {
+  if(!isReady) {
+    await init();
+  }
+  return contract.methods.room_thres(n).call({ from: selectedAccount });
+}
+
+export const getCurrentActiveTime = async (pin) => {
+  if(!isReady) {
+    await init();
+  }
+  return contract.methods.getCurrentActiveTime(pin).call({ from: selectedAccount });
+}
